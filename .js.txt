@@ -1,0 +1,88 @@
+let cart = [];
+let menuData = [];
+
+// Load menu dari file JSON
+fetch("menu.json")
+    .then(res => res.json())
+    .then(data => {
+        menuData = data;
+        displayMenu(data);
+    });
+
+// Tampilkan menu
+function displayMenu(menu) {
+    const container = document.getElementById("menuContainer");
+
+    menu.forEach(item => {
+        const card = document.createElement("div");
+        card.classList.add("menu-card");
+
+        card.innerHTML = `
+            <img src="${item.gambar}">
+            <h3>${item.nama}</h3>
+            <p>Rp ${item.harga}</p>
+            <button onclick="addToCart(${item.id})">Tambah</button>
+        `;
+
+        container.appendChild(card);
+    });
+}
+
+// Tambah ke keranjang
+function addToCart(id) {
+    const item = menuData.find(m => m.id === id);
+    cart.push(item);
+    renderCart();
+}
+
+// Render keranjang
+function renderCart() {
+    const list = document.getElementById("cartItems");
+    const total = document.getElementById("totalPrice");
+
+    list.innerHTML = "";
+    let totalHarga = 0;
+
+    cart.forEach((item, i) => {
+        totalHarga += item.harga;
+
+        list.innerHTML += `
+            <li>${item.nama} - Rp ${item.harga} 
+            <button onclick="removeItem(${i})">x</button></li>
+        `;
+    });
+
+    total.textContent = totalHarga;
+}
+
+// Hapus item
+function removeItem(i) {
+    cart.splice(i, 1);
+    renderCart();
+}
+
+// Kirim pesanan ke kasir (localStorage)
+document.getElementById("submitOrderBtn").onclick = () => {
+    const meja = document.getElementById("tableNumber").value;
+
+    if (!meja) return alert("Masukkan nomor meja!");
+
+    const order = {
+        meja: meja,
+        items: cart,
+        total: cart.reduce((a,b) => a + b.harga, 0),
+        waktu: new Date().toLocaleString()
+    };
+
+    // Simpan ke localStorage biar kasir bisa lihat
+    let existing = JSON.parse(localStorage.getItem("orders") || "[]");
+    existing.push(order);
+
+    localStorage.setItem("orders", JSON.stringify(existing));
+
+    alert("Pesanan terkirim ke kasir!");
+
+    cart = [];
+    renderCart();
+    document.getElementById("tableNumber").value = "";
+};

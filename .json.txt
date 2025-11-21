@@ -1,0 +1,20 @@
+[
+    {
+        "id": 1,
+        "nama": "Nasi Goreng",
+        "harga": 15000,
+        "gambar": "https://i.imgur.com/eLmPZ7W.jpeg"
+    },
+    {
+        "id": 2,
+        "nama": "Es Teh Manis",
+        "harga": 5000,
+        "gambar": "https://i.imgur.com/Bt1I3yJ.jpeg"
+    },
+    {
+        "id": 3,
+        "nama": "Ayam Geprek",
+        "harga": 17000,
+        "gambar": "https://i.imgur.com/2KxZtM1.jpeg"
+    }
+]
